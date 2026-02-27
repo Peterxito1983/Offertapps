@@ -1,0 +1,210 @@
+/* Company Dashboard Styles */
+.company-dashboard-header {
+    background: linear-gradient(135deg, var(--ion-color-primary) 0%, #5b47d1 100%);
+    padding: 40px 24px;
+    border: none;
+    color: #ffffff;
+}
+
+.company-title-section h1 {
+    font-size: 3.5rem;
+    font-weight: 900;
+    margin: 0;
+    color: #ffffff;
+    letter-spacing: -0.06em;
+    text-transform: uppercase;
+    line-height: 0.85;
+}
+
+.company-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.1rem;
+    margin-top: 8px;
+    font-weight: 600;
+}
+
+.nav-scroll-wrapper {
+    position: relative;
+    margin: 32px -24px 0 -24px;
+    padding: 0 24px;
+}
+
+.professional-nav-container {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 4px 0 16px 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.professional-nav-container::-webkit-scrollbar {
+    display: none;
+}
+
+/* Fade indicator for horizontal scroll */
+.nav-scroll-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    right: 0;
+    width: 60px;
+    height: calc(100% - 20px);
+    background: linear-gradient(to right, transparent, #ffffff);
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .nav-scroll-wrapper::after {
+        opacity: 1;
+    }
+}
+
+.scroll-hint {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--ion-color-primary);
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(var(--ion-color-primary-rgb), 0.3);
+    z-index: 10;
+    animation: bounceRight 2s infinite;
+    pointer-events: none;
+}
+
+@keyframes bounceRight {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(-50%) translateX(0);
+    }
+
+    40% {
+        transform: translateY(-50%) translateX(-6px);
+    }
+
+    60% {
+        transform: translateY(-50%) translateX(-3px);
+    }
+}
+
+.scroll-hint-hidden {
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s ease;
+}
+
+.nav-pill {
+    padding: 14px 24px;
+    border-radius: 18px;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    backdrop-filter: blur(10px);
+}
+
+.nav-pill.active {
+    background: #ffffff;
+    color: var(--ion-color-primary);
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.nav-pill:hover:not(.active) {
+    box-shadow: 8px 8px 16px #d1d9e6, -8px -8px 16px #ffffff;
+    transform: translateY(-2px);
+}
+
+.business-card {
+    background: var(--app-bg-color);
+    border-radius: var(--offertapps-radius-lg);
+    padding: 32px;
+    box-shadow: var(--nm-dark-shadow), var(--nm-light-shadow);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.business-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 12px 12px 24px #d1d9e6, -12px -12px 24px #ffffff;
+}
+
+.offer-management-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding-bottom: 20px;
+}
+
+.action-icon-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.action-icon-btn ion-icon {
+    font-size: 24px;
+}
+
+.action-icon-btn.primary {
+    background: rgba(var(--ion-color-primary-rgb), 0.1);
+    color: var(--ion-color-primary);
+}
+
+.action-icon-btn.danger {
+    background: rgba(var(--ion-color-danger-rgb), 0.1);
+    color: var(--ion-color-danger);
+}
+
+.action-icon-btn.boost {
+    background: rgba(var(--ion-color-tertiary-rgb), 0.15);
+    color: var(--ion-color-tertiary-shade);
+}
+
+.action-icon-btn:hover {
+    filter: brightness(1.05);
+    transform: scale(1.08);
+}
+
+.action-icon-btn:active {
+    transform: scale(0.95);
+}
+
+@media (max-width: 640px) {
+    .company-dashboard-header {
+        padding: 32px 20px;
+    }
+
+    .company-title-section h1 {
+        font-size: 1.8rem;
+    }
+}

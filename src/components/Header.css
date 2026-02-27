@@ -1,0 +1,113 @@
+.shopee-header {
+    background: var(--ion-color-primary);
+    --background: var(--ion-color-primary);
+    padding: 12px 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.shopee-top-bar {
+    display: none;
+    /* User wants minimalist */
+}
+
+.shopee-toolbar {
+    --background: transparent;
+    --color: var(--app-text-color);
+    --min-height: 80px;
+    padding: 0 20px;
+}
+
+.header-main-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 20px;
+}
+
+.brand-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.brand-icon {
+    font-size: 32px;
+    color: #ffffff;
+}
+
+.brand-text {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: -0.06em;
+    text-transform: uppercase;
+    line-height: 0.8;
+}
+
+.brand-logo-img {
+    width: 44px;
+    height: 44px;
+    margin-right: 12px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    background: #ffffff;
+    padding: 2px;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.header-icon-btn {
+    --color: #ffffff;
+    --border-radius: 12px;
+    background: rgba(255, 255, 255, 0.15);
+    margin-left: 12px;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.header-icon-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.cart-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: var(--ion-color-secondary);
+    color: #ffffff;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 3px 7px;
+    border-radius: 10px;
+    line-height: 1;
+    border: 2px solid var(--ion-color-primary);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.header-logout-btn {
+    --color: rgba(255, 255, 255, 0.8);
+}
+
+@media (max-width: 768px) {
+    .shopee-top-bar {
+        display: none;
+    }
+
+    .brand-text {
+        display: none;
+    }
+
+    .header-main-container {
+        gap: 10px;
+    }
+}

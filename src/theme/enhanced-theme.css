@@ -1,0 +1,287 @@
+/* src/theme/enhanced-theme.css */
+
+/* Estilos mejorados para la aplicación */
+
+/* Estilos para inputs validados */
+.validated-input-container {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.validated-input-container.ion-valid {
+  --border-color: var(--ion-color-success);
+}
+
+.validated-input-container.ion-invalid {
+  --border-color: var(--ion-color-danger);
+}
+
+.validated-input-container.ion-touched {
+  --border-width: 2px;
+}
+
+/* Estilos para cards mejoradas */
+.enhanced-card {
+  box-shadow: 
+    0 2px 10px rgba(0, 0, 0, 0.05),
+    0 4px 20px rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  margin-bottom: 16px;
+}
+
+.enhanced-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 4px 15px rgba(0, 0, 0, 0.1),
+    0 6px 25px rgba(0, 0, 0, 0.12);
+}
+
+/* Estilos para botones mejorados */
+.enhanced-button {
+  --border-radius: 12px;
+  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.enhanced-button:hover {
+  --box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.enhanced-button:active {
+  transform: translateY(0);
+}
+
+/* Estilos para modales */
+.enhanced-modal {
+  --border-radius: 20px;
+  --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilos para listas */
+.enhanced-list-item {
+  --border-radius: 12px;
+  --border-width: 1px;
+  --border-color: var(--ion-color-light);
+  margin-bottom: 8px;
+  transition: all 0.2s ease;
+}
+
+.enhanced-list-item:hover {
+  --background: var(--ion-color-light-shade);
+  transform: translateX(4px);
+}
+
+/* Estilos para formularios */
+.enhanced-form-section {
+  background: var(--ion-color-light-tint);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.enhanced-form-header {
+  font-weight: 600;
+  color: var(--ion-color-primary);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--ion-color-primary-tint);
+}
+
+/* Estilos para mensajes */
+.enhanced-error-message {
+  background: var(--ion-color-danger-tint);
+  border-left: 4px solid var(--ion-color-danger);
+  border-radius: 0 8px 8px 0;
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.enhanced-success-message {
+  background: var(--ion-color-success-tint);
+  border-left: 4px solid var(--ion-color-success);
+  border-radius: 0 8px 8px 0;
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.enhanced-warning-message {
+  background: var(--ion-color-warning-tint);
+  border-left: 4px solid var(--ion-color-warning);
+  border-radius: 0 8px 8px 0;
+  padding: 16px;
+  margin: 16px 0;
+}
+
+/* Estilos para carga */
+.enhanced-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.enhanced-loader-text {
+  margin-top: 16px;
+  text-align: center;
+}
+
+/* Estilos para tablas (si se usan) */
+.enhanced-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.enhanced-table th {
+  background: var(--ion-color-primary);
+  color: white;
+  padding: 12px 16px;
+  text-align: left;
+}
+
+.enhanced-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--ion-color-light);
+}
+
+.enhanced-table tr:last-child td {
+  border-bottom: none;
+}
+
+.enhanced-table tr:hover {
+  background: var(--ion-color-light-shade);
+}
+
+/* Estilos para tooltips (si se implementan) */
+.enhanced-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.enhanced-tooltip .enhanced-tooltip-text {
+  visibility: hidden;
+  width: 200px;
+  background-color: var(--ion-color-dark);
+  color: white;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.enhanced-tooltip:hover .enhanced-tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Estilos para animaciones */
+.slide-in-from-right {
+  animation: slideInRight 0.3s ease-out forwards;
+}
+
+.slide-out-to-right {
+  animation: slideOutRight 0.3s ease-out forwards;
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Estilos para dispositivos móviles */
+@media (max-width: 768px) {
+  .enhanced-card {
+    border-radius: 12px;
+    margin: 8px;
+  }
+  
+  .enhanced-form-section {
+    padding: 16px;
+    margin: 8px;
+  }
+  
+  .enhanced-modal {
+    --border-radius: 16px 16px 0 0;
+    --box-shadow: none;
+  }
+}
+
+/* Estilos para temas oscuros (si se soporta) */
+@media (prefers-color-scheme: dark) {
+  .enhanced-form-section {
+    background: var(--ion-color-dark-tint);
+  }
+  
+  .enhanced-list-item {
+    --background: var(--ion-color-dark-shade);
+    --border-color: var(--ion-color-medium);
+  }
+  
+  .enhanced-list-item:hover {
+    --background: var(--ion-color-dark);
+  }
+}
+
+/* Estilos para accesibilidad */
+.enhanced-focus {
+  outline: 2px solid var(--ion-color-primary);
+  outline-offset: 2px;
+}
+
+.enhanced-high-contrast {
+  --border-width: 2px;
+  --border-style: solid;
+}
+
+/* Estilos para elementos deshabilitados */
+.enhanced-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.enhanced-disabled:hover {
+  transform: none;
+  box-shadow: none;
+}

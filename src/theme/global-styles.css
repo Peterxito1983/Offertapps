@@ -1,0 +1,225 @@
+/* src/theme/global-styles.css */
+
+/* Importar estilos mejorados para la aplicación */
+@import './enhanced-theme.css';
+
+body {
+  background-color: var(--app-bg-color);
+  color: var(--app-text-color);
+  font-family: var(--app-font-family);
+}
+
+/* Estilos adicionales para mejorar la UX */
+
+/* Animaciones suaves para transiciones */
+* {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+/* Estilo para elementos con foco */
+*:focus {
+  outline: 2px solid var(--ion-color-primary);
+  outline-offset: 2px;
+}
+
+/* Estilo para botones con hover */
+ion-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(var(--ion-color-primary-rgb), 0.2) !important;
+}
+
+/* Estilo para cards con hover */
+ion-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--offertapps-shadow-lg) !important;
+}
+
+/* Estilo para items de lista con hover */
+ion-item:hover {
+  background: var(--ion-color-primary-tint);
+  --background: var(--ion-color-primary-tint);
+  opacity: 0.9;
+}
+
+/* Estilo para inputs con focus */
+ion-input:focus-within,
+ion-textarea:focus-within,
+ion-select:focus-within {
+  --border-color: var(--ion-color-primary);
+  --box-shadow: 0 0 0 2px rgba(var(--ion-color-primary-rgb), 0.2);
+}
+
+/* Estilo para mejorar la legibilidad */
+.text-bold {
+  font-weight: 600;
+}
+
+.text-large {
+  font-size: 1.2rem;
+}
+
+.text-small {
+  font-size: 0.85rem;
+}
+
+/* Espaciado consistente */
+.padding-small {
+  padding: 8px;
+}
+
+.padding-medium {
+  padding: 16px;
+}
+
+.padding-large {
+  padding: 24px;
+}
+
+.margin-small {
+  margin: 8px;
+}
+
+.margin-medium {
+  margin: 16px;
+}
+
+.margin-large {
+  margin: 24px;
+}
+
+/* Centrado de contenido */
+.center-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Estilo para elementos deshabilitados */
+.disabled-overlay {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* Estilo para efectos de carga */
+.loading-overlay {
+  position: relative;
+}
+
+.loading-overlay::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Estilo para mensajes de estado */
+.status-message {
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  margin: 16px 0;
+}
+
+.status-message.success {
+  background-color: var(--ion-color-success-tint);
+  color: var(--ion-color-success-contrast);
+}
+
+.status-message.error {
+  background-color: var(--ion-color-danger-tint);
+  color: var(--ion-color-danger-contrast);
+}
+
+.status-message.warning {
+  background-color: var(--ion-color-warning-tint);
+  color: var(--ion-color-warning-contrast);
+}
+
+.status-message.info {
+  background-color: var(--ion-color-primary-tint);
+  color: var(--ion-color-primary-contrast);
+}
+
+/* Estilo para elementos con borde redondeado */
+.rounded-element {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Estilo para sombras sutiles */
+.subtle-shadow {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Estilo para elementos con borde */
+.bordered-element {
+  border: 1px solid var(--ion-color-light);
+  border-radius: 8px;
+}
+
+/* Estilo para elementos con gradiente de fondo */
+.gradient-background {
+  background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-secondary));
+  color: white;
+}
+
+/* Estilo para elementos con efecto de profundidad */
+.depth-effect {
+  position: relative;
+}
+
+.depth-effect::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 4px;
+  width: calc(100% - 8px);
+  height: 4px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  z-index: -1;
+}
+
+/* Premium Tab Bar Customization */
+ion-tab-bar {
+  --background: rgba(255, 255, 255, 0.85);
+  --border: none;
+  backdrop-filter: var(--offertapps-glass);
+  -webkit-backdrop-filter: var(--offertapps-glass);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.04);
+  padding-bottom: env(safe-area-inset-bottom);
+  height: calc(60px + env(safe-area-inset-bottom));
+}
+
+ion-tab-button {
+  --color: #94a3b8;
+  --color-selected: var(--ion-color-primary);
+  background: transparent;
+}
+
+ion-tab-button ion-icon {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+ion-tab-button ion-label {
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+
+ion-tab-button.tab-selected ion-icon {
+  transform: translateY(-2px);
+  filter: drop-shadow(0 4px 8px rgba(79, 70, 229, 0.3));
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}

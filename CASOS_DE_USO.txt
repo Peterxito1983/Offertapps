@@ -1,0 +1,614 @@
+================================================================================
+                         CASOS DE USO - OFFERTAPPS
+                    Plataforma de Ofertas y Descuentos
+================================================================================
+
+Fecha: 25 de febrero de 2026
+Versión: 1.0.0
+Tecnología: React + Ionic + Firebase + Capacitor (PWA/Mobile)
+
+================================================================================
+                              DESCRIPCIÓN GENERAL
+================================================================================
+
+OffertApps es una plataforma digital que conecta empresas con usuarios finales
+a través de ofertas y promociones. La aplicación permite a las empresas publicar
+sus ofertas, gestionar suscripciones y interactuar con clientes, mientras que
+los usuarios pueden explorar ofertas, guardar favoritos, dejar reseñas y
+recibir notificaciones personalizadas.
+
+================================================================================
+                              ACTORES DEL SISTEMA
+================================================================================
+
+1. USUARIO FINAL (USER)
+   - Persona que busca y consume ofertas
+   - Puede marcar favoritos y dejar reseñas
+   - Recibe notificaciones push
+
+2. EMPRESA (COMPANY)
+   - Negocio que publica ofertas
+   - Tiene suscripción (Básica o Premium)
+   - Gestiona su perfil y contenido
+
+3. ADMINISTRADOR (ADMIN)
+   - Gestiona la plataforma
+   - Verifica empresas
+   - Modera contenido
+
+================================================================================
+                         CASOS DE USO POR ACTOR
+================================================================================
+
+------------------------------------------------------------------------------
+                          USUARIO FINAL
+------------------------------------------------------------------------------
+
+UC-001: REGISTRARSE COMO USUARIO
+--------------------------------
+Descripción: Un nuevo usuario crea una cuenta en la plataforma.
+Precondición: No tener cuenta previa.
+Flujo Principal:
+  1. Usuario abre la aplicación
+  2. Selecciona "Registrarse"
+  3. Ingresa nombre, correo y contraseña
+  4. Confirma el registro
+  5. El sistema crea la cuenta con rol "user"
+  6. Usuario es redirigido a la pantalla principal
+Postcondición: Usuario autenticado puede explorar ofertas.
+
+UC-002: INICIAR SESIÓN
+----------------------
+Descripción: Usuario accede a su cuenta existente.
+Precondición: Tener cuenta registrada.
+Flujo Principal:
+  1. Usuario ingresa correo y contraseña
+  2. Sistema valida credenciales
+  3. Usuario es autenticado
+  4. Redirección según rol (user → /tabs/explore)
+Postcondición: Usuario tiene acceso a todas las funcionalidades.
+
+UC-003: RECUPERAR CONTRASEÑA
+----------------------------
+Descripción: Usuario restablece su contraseña olvidada.
+Precondición: Tener cuenta registrada.
+Flujo Principal:
+  1. Usuario selecciona "Olvidé mi contraseña"
+  2. Ingresa su correo electrónico
+  3. Sistema envía enlace de recuperación
+  4. Usuario hace clic en el enlace
+  5. Ingresa nueva contraseña
+  6. Sistema actualiza la contraseña
+Postcondición: Usuario puede iniciar sesión con nueva contraseña.
+
+UC-004: EXPLORAR OFERTAS
+------------------------
+Descripción: Usuario navega y busca ofertas disponibles.
+Precondición: Usuario autenticado.
+Flujo Principal:
+  1. Usuario accede a pestaña "Explorar"
+  2. Sistema muestra lista de ofertas ordenadas por fecha
+  3. Usuario puede filtrar por categoría
+  4. Usuario puede buscar por texto
+  5. Usuario selecciona una oferta para ver detalles
+Postcondición: Usuario visualiza información completa de la oferta.
+
+UC-005: VER DETALLES DE OFERTA
+------------------------------
+Descripción: Usuario consulta información detallada de una oferta.
+Precondición: Usuario en lista de ofertas.
+Flujo Principal:
+  1. Usuario selecciona una oferta
+  2. Sistema muestra modal con:
+     - Título y descripción
+     - Imagen de la oferta
+     - Descuento
+     - Información de la empresa
+     - Sede(s) disponible(s)
+     - Fecha de validez
+  3. Usuario puede ver reseñas de otros usuarios
+Postcondición: Usuario tiene información completa para decidir.
+
+UC-006: MARCAR OFERTA COMO FAVORITA
+-----------------------------------
+Descripción: Usuario guarda una oferta en su lista de favoritos.
+Precondición: Usuario autenticado, oferta visible.
+Flujo Principal:
+  1. Usuario visualiza una oferta
+  2. Presiona botón de "corazón/favorito"
+  3. Sistema guarda el ID de la oferta en favoritos del usuario
+  4. Sistema muestra confirmación visual
+Postcondición: Oferta aparece en la lista de favoritos del usuario.
+
+UC-007: VER FAVORITOS
+---------------------
+Descripción: Usuario consulta su lista de ofertas favoritas.
+Precondición: Usuario autenticado, tener favoritos guardados.
+Flujo Principal:
+  1. Usuario navega a pestaña "Favoritos"
+  2. Sistema carga ofertas marcadas como favoritas
+  3. Sistema muestra información completa de cada oferta
+  4. Usuario puede eliminar ofertas de favoritos
+Postcondición: Usuario gestiona su lista de favoritos.
+
+UC-008: DEJAR RESEÑA
+--------------------
+Descripción: Usuario califica y comenta una oferta.
+Precondición: Usuario autenticado, oferta visible.
+Flujo Principal:
+  1. Usuario abre detalles de oferta
+  2. Selecciona opción "Dejar reseña"
+  3. Ingresa calificación (1-5 estrellas)
+  4. Escribe comentario
+  5. Envía la reseña
+  6. Sistema guarda la reseña asociada a la oferta
+Postcondición: Reseña publicada y visible para otros usuarios.
+
+UC-009: VER OFERTAS EN MAPA
+---------------------------
+Descripción: Usuario visualiza ofertas geolocalizadas en un mapa.
+Precondición: Usuario autenticado.
+Flujo Principal:
+  1. Usuario navega a pestaña "Mapa"
+  2. Sistema muestra mapa con ubicaciones de empresas
+  3. Usuario puede hacer clic en marcadores
+  4. Sistema muestra información de ofertas cercanas
+Postcondición: Usuario identifica ofertas por ubicación geográfica.
+
+UC-010: GESTIONAR NOTIFICACIONES PUSH
+-------------------------------------
+Descripción: Usuario configura preferencias de notificaciones.
+Precondición: Usuario autenticado.
+Flujo Principal:
+  1. Usuario accede a configuración de notificaciones
+  2. Activa/desactiva tipos de notificación:
+     - Ofertas
+     - Promociones
+     - Recordatorios
+     - Seguimiento
+  3. Sistema guarda preferencias
+  4. Sistema solicita permisos al navegador/dispositivo
+Postcondición: Usuario recibe notificaciones según preferencias.
+
+UC-011: COMPARTIR OFERTA
+------------------------
+Descripción: Usuario comparte una oferta con otros.
+Precondición: Usuario visualizando oferta.
+Flujo Principal:
+  1. Usuario selecciona opción "Compartir"
+  2. Sistema abre menú de compartir nativo
+  3. Usuario elige medio (WhatsApp, redes, etc.)
+  4. Sistema registra la interacción
+Postcondición: Oferta compartida exitosamente.
+
+UC-012: CONTACTAR EMPRESA POR WHATSAPP
+--------------------------------------
+Descripción: Usuario contacta directamente a la empresa.
+Precondición: Oferta visible, empresa con WhatsApp configurado.
+Flujo Principal:
+  1. Usuario en detalles de oferta
+  2. Selecciona botón "WhatsApp"
+  3. Sistema abre chat de WhatsApp con la empresa
+  4. Sistema registra la interacción
+Postcondición: Usuario en contacto directo con la empresa.
+
+------------------------------------------------------------------------------
+                          EMPRESA
+------------------------------------------------------------------------------
+
+UC-101: REGISTRARSE COMO EMPRESA
+--------------------------------
+Descripción: Negocio crea una cuenta corporativa.
+Precondición: No tener cuenta previa.
+Flujo Principal:
+  1. Usuario selecciona "Registrarse como empresa"
+  2. Ingresa datos de la empresa:
+     - Nombre
+     - Información de contacto
+     - Dirección principal
+  3. Sistema crea cuenta con rol "company"
+  4. Empresa queda en estado "no verificada"
+Postcondición: Empresa registrada, pendiente de verificación.
+
+UC-102: GESTIONAR PERFIL DE EMPRESA
+-----------------------------------
+Descripción: Empresa actualiza su información corporativa.
+Precondición: Empresa autenticada.
+Flujo Principal:
+  1. Empresa accede a configuración de perfil
+  2. Puede editar:
+     - Nombre y logo
+     - Dirección y ciudad
+     - WhatsApp de contacto
+     - Horarios de atención
+     - Redes sociales (Facebook, Instagram, TikTok, X)
+  3. Puede agregar/eliminar sedes
+  4. Sistema guarda cambios
+Postcondición: Perfil de empresa actualizado.
+
+UC-103: AGREGAR SEDE
+--------------------
+Descripción: Empresa registra una nueva ubicación/sucursal.
+Precondición: Empresa autenticada.
+Flujo Principal:
+  1. Empresa accede a gestión de sedes
+  2. Selecciona "Agregar sede"
+  3. Ingresa datos:
+     - Nombre de la sede
+     - Dirección completa
+     - Ciudad
+     - WhatsApp específico
+     - Horarios
+     - Enlace a mapa
+     - Coordenadas (latitud, longitud)
+  4. Sistema guarda la sede
+Postcondición: Nueva sede disponible para ofertas.
+
+UC-104: PUBLICAR OFERTA
+-----------------------
+Descripción: Empresa crea una nueva oferta.
+Precondición: Empresa autenticada y verificada.
+Flujo Principal:
+  1. Empresa accede a "Crear oferta"
+  2. Completa formulario:
+     - Título
+     - Descripción
+     - Categoría
+     - Tipo (descuento, 2x1, lanzamiento, compra-compartida)
+     - Porcentaje de descuento
+     - Imagen
+     - Sede asociada
+     - Fecha de validez (opcional)
+     - Recurrente (sí/no)
+  3. Sistema valida límites según plan:
+     - Básico: máximo 5 ofertas
+     - Premium: ofertas ilimitadas
+  4. Sistema publica la oferta
+Postcondición: Oferta visible para usuarios (si empresa verificada).
+
+UC-105: EDITAR OFERTA
+---------------------
+Descripción: Empresa modifica una oferta existente.
+Precondición: Empresa autenticada, oferta creada previamente.
+Flujo Principal:
+  1. Empresa selecciona oferta a editar
+  2. Modifica campos deseados
+  3. Puede cambiar imagen
+  4. Sistema guarda cambios
+  5. Sistema actualiza fecha de modificación
+Postcondición: Oferta actualizada visible para usuarios.
+
+UC-106: ELIMINAR OFERTA
+-----------------------
+Descripción: Empresa remueve una oferta publicada.
+Precondición: Empresa autenticada, oferta propia.
+Flujo Principal:
+  1. Empresa selecciona oferta
+  2. Confirma eliminación
+  3. Sistema elimina oferta de la base de datos
+  4. Sistema elimina ofertas relacionadas (reseñas)
+Postcondición: Oferta ya no visible para usuarios.
+
+UC-107: RESPONDER RESEÑA
+------------------------
+Descripción: Empresa responde a comentario de usuario.
+Precondición: Empresa autenticada, reseña en oferta propia.
+Flujo Principal:
+  1. Empresa visualiza reseña recibida
+  2. Selecciona "Responder"
+  3. Escribe respuesta
+  4. Sistema guarda respuesta con fecha
+Postcondición: Respuesta visible junto a la reseña original.
+
+UC-108: SUSCRIBIRSE A PLAN DE PAGO
+----------------------------------
+Descripción: Empresa contrata plan Básico o Premium.
+Precondición: Empresa autenticada.
+Flujo Principal:
+  1. Empresa accede a sección de pagos
+  2. Selecciona plan (Básico $49,900 COP o Premium $99,900 COP)
+  3. Elige método de pago:
+     - Tarjeta de crédito/débito
+     - PSE
+     - Google Pay
+     - PayPal
+     - MercadoPago
+  4. Completa proceso de pago
+  5. Sistema actualiza estado de suscripción
+  6. Sistema registra fecha de inicio/fin
+Postcondición: Empresa con suscripción activa.
+
+UC-109: RENOVAR SUSCRIPCIÓN
+---------------------------
+Descripción: Empresa renueva su plan vencido.
+Precondición: Empresa con suscripción próxima a vencer.
+Flujo Principal:
+  1. Sistema notifica vencimiento próximo
+  2. Empresa accede a gestión de suscripción
+  3. Selecciona renovar
+  4. Procesa pago
+  5. Sistema extiende fecha de vencimiento
+Postcondición: Suscripción renovada por otro periodo.
+
+UC-110: CANCELAR SUSCRIPCIÓN
+----------------------------
+Descripción: Empresa cancela su plan activo.
+Precondición: Empresa con suscripción activa.
+Flujo Principal:
+  1. Empresa accede a gestión de suscripción
+  2. Selecciona "Cancelar suscripción"
+  3. Confirma cancelación
+  4. Sistema actualiza estado a "cancelled"
+  5. Sistema mantiene acceso hasta fin de periodo
+Postcondición: Suscripción cancelada, sin renovaciones futuras.
+
+UC-111: VER ESTADÍSTICAS DE OFERTAS
+-----------------------------------
+Descripción: Empresa consulta métricas de sus publicaciones.
+Precondición: Empresa autenticada, plan Premium.
+Flujo Principal:
+  1. Empresa accede a panel de estadísticas
+  2. Sistema muestra:
+     - Visualizaciones por oferta
+     - Clicks en WhatsApp
+     - Ofertas guardadas
+     - Compartidos
+     - Reseñas recibidas
+  3. Sistema muestra gráficas y tendencias
+Postcondición: Empresa tiene insights de rendimiento.
+
+------------------------------------------------------------------------------
+                          ADMINISTRADOR
+------------------------------------------------------------------------------
+
+UC-201: INICIAR SESIÓN COMO ADMIN
+---------------------------------
+Descripción: Administrador accede al panel de control.
+Precondición: Tener cuenta con rol "admin".
+Flujo Principal:
+  1. Admin ingresa credenciales
+  2. Sistema valida rol "admin"
+  3. Redirección automática a /admin
+Postcondición: Admin accede a panel de administración.
+
+UC-202: VERIFICAR EMPRESA
+-------------------------
+Descripción: Admin aprueba y verifica una empresa registrada.
+Precondición: Empresa registrada, pendiente de verificación.
+Flujo Principal:
+  1. Admin accede a lista de empresas
+  2. Identifica empresas no verificadas
+  3. Revisa información:
+     - Nombre y logo
+     - Sedes y ubicaciones
+     - Información de contacto
+  4. Valida legitimidad de la empresa
+  5. Selecciona "Verificar" (✓)
+  6. Sistema actualiza isVerified = true
+Postcondición: Empresa verificada, sus ofertas son visibles.
+
+UC-203: RECHAZAR VERIFICACIÓN
+-----------------------------
+Descripción: Admin deniega verificación a empresa.
+Precondición: Empresa pendiente de verificación.
+Flujo Principal:
+  1. Admin revisa empresa
+  2. Identifica problemas:
+     - Información incompleta
+     - Datos falsos
+     - Incumplimiento de políticas
+  3. Selecciona "No Verificar" (⚠️)
+  4. Sistema actualiza isVerified = false
+  5. (Opcional) Notifica a empresa
+Postcondición: Empresa no verificada, ofertas ocultas.
+
+UC-204: ELIMINAR EMPRESA
+------------------------
+Descripción: Admin remueve empresa de la plataforma.
+Precondición: Empresa existente.
+Flujo Principal:
+  1. Admin selecciona empresa a eliminar
+  2. Confirma eliminación
+  3. Sistema elimina:
+     - Registro de empresa
+     - Todas sus ofertas
+     - Todas las reseñas asociadas
+Postcondición: Empresa y contenido relacionado eliminados.
+
+UC-205: ELIMINAR OFERTA
+-----------------------
+Descripción: Admin remueve oferta inapropiada.
+Precondición: Oferta publicada.
+Flujo Principal:
+  1. Admin identifica oferta inapropiada
+  2. Selecciona "Eliminar" (🗑️)
+  3. Confirma acción
+  4. Sistema elimina oferta
+Postcondición: Oferta ya no visible para usuarios.
+
+UC-206: ELIMINAR RESEÑA
+-----------------------
+Descripción: Admin remueve reseña inapropiada.
+Precondición: Reseña publicada.
+Flujo Principal:
+  1. Admin identifica reseña inapropiada:
+     - Lenguaje ofensivo
+     - Contenido falso
+     - Spam
+  2. Selecciona "Eliminar" (🗑️)
+  3. Confirma acción
+  4. Sistema elimina reseña
+Postcondición: Reseña eliminada permanentemente.
+
+UC-207: GESTIONAR ROLES DE USUARIO
+----------------------------------
+Descripción: Admin modifica roles de usuarios en Firebase.
+Precondición: Acceso a Firebase Console.
+Flujo Principal:
+  1. Admin accede a Firebase Console
+  2. Navega a Realtime Database → users/{userId}
+  3. Edita campo "role":
+     - "user" → Usuario regular
+     - "company" → Empresa
+     - "admin" → Administrador
+Postcondición: Rol de usuario actualizado.
+
+UC-208: MONITOREAR ACTIVIDAD
+----------------------------
+Descripción: Admin supervisa actividad de la plataforma.
+Precondición: Admin autenticado.
+Flujo Principal:
+  1. Admin accede a panel de monitoreo
+  2. Revisa:
+     - Usuarios registrados por periodo
+     - Empresas verificadas
+     - Ofertas publicadas
+     - Reseñas recibidas
+     - Logs de actividad
+  3. Identifica patrones inusuales
+  4. Toma acciones correctivas si es necesario
+Postcondición: Plataforma bajo supervisión.
+
+UC-209: GESTIONAR CONTENIDO
+---------------------------
+Descripción: Admin supervisa calidad de contenido publicado.
+Precondición: Admin autenticado.
+Flujo Principal:
+  1. Admin revisa ofertas publicadas
+  2. Verifica:
+     - Descripciones adecuadas
+     - Imágenes apropiadas
+     - Descuentos válidos
+     - Cumplimiento de políticas
+  3. Revisa reseñas
+  4. Identifica contenido problemático
+  5. Aplica moderación si es necesario
+Postcondición: Contenido de plataforma mantenido bajo estándares.
+
+================================================================================
+                         REGLAS DE NEGOCIO
+================================================================================
+
+RB-001: Una empresa no verificada NO puede tener ofertas visibles.
+RB-002: Plan Básico permite máximo 5 ofertas activas simultáneas.
+RB-003: Plan Premium permite ofertas ilimitadas.
+RB-004: Solo empresas verificadas aparecen en el mapa.
+RB-005: Usuarios solo pueden dejar reseñas en ofertas visibles.
+RB-006: Una oferta eliminada elimina también sus reseñas asociadas.
+RB-007: Empresas eliminadas borran todo su contenido (ofertas, reseñas).
+RB-008: Notificaciones push requieren permiso explícito del usuario.
+RB-009: Favoritos se persisten en Firebase Realtime Database.
+RB-010: Contraseñas se gestionan mediante Firebase Authentication.
+RB-011: Pagos se procesan mediante proveedores externos (Stripe, PayPal, etc.).
+RB-012: Admin tiene acceso total a todas las colecciones de datos.
+
+================================================================================
+                         ESTADOS DEL CICLO DE VIDA
+================================================================================
+
+ESTADOS DE EMPRESA:
+- no_verificada → verificada (por admin)
+- verificada → no_verificada (por admin)
+- activa → eliminada (por admin o propio)
+
+ESTADOS DE SUSCRIPCIÓN:
+- pending → active (tras pago exitoso)
+- active → expired (al vencer)
+- active → cancelled (por usuario)
+- expired → active (tras renovación)
+
+ESTADOS DE PAGO:
+- pending → processing → completed
+- pending → failed
+- completed → refunded (si aplica)
+
+ESTADOS DE CAMPAÑA:
+- draft → pending → active → completed
+- draft → cancelled
+- active → error (si hay fallo)
+
+================================================================================
+                         DIAGRAMA DE NAVEGACIÓN
+================================================================================
+
+/ (root)
+  └── /auth (Login/Registro)
+        └── [Según rol]
+              ├── /tabs (Usuario)
+              │     ├── /tabs/explore (Explorar ofertas)
+              │     ├── /tabs/map (Mapa)
+              │     ├── /tabs/favorites (Favoritos)
+              │     └── /tabs/profile (Perfil - integrado en explore)
+              │
+              ├── /company (Dashboard Empresa)
+              │     ├── Gestión de ofertas
+              │     ├── Gestión de perfil
+              │     ├── Gestión de suscripción
+              │     └── Respuesta a reseñas
+              │
+              └── /admin (Panel Administrador)
+                    ├── Gestión de empresas
+                    ├── Gestión de ofertas
+                    ├── Gestión de reseñas
+                    └── Monitoreo
+
+================================================================================
+                         INTEGRACIONES EXTERNAS
+================================================================================
+
+1. FIREBASE
+   - Authentication: Gestión de usuarios
+   - Realtime Database: Almacenamiento de datos
+   - Storage: Imágenes de ofertas y logos
+   - Cloud Messaging: Notificaciones push
+
+2. PROVEEDORES DE PAGO
+   - Stripe: Tarjetas de crédito/débito
+   - PayPal: Pagos internacionales
+   - MercadoPago: PSE y métodos latinos
+   - Google Pay: Pagos móviles
+
+3. CAPACITOR
+   - Geolocation: Ubicación en mapa
+   - Camera: Captura de imágenes
+   - Share: Compartir contenido
+   - Push Notifications: Notificaciones nativas
+   - Status Bar: UI nativa
+   - Splash Screen: Pantalla de carga
+
+4. REDES SOCIALES (para compartir)
+   - WhatsApp: Contacto directo
+   - Facebook: Compartir ofertas
+   - Instagram: Compartir ofertas
+   - TikTok: Compartir ofertas
+
+================================================================================
+                         MÉTRICAS Y KPIS
+================================================================================
+
+PARA USUARIOS:
+- Número de ofertas vistas
+- Número de favoritos guardados
+- Número de reseñas escritas
+- Número de ofertas compartidas
+- Clicks en WhatsApp
+
+PARA EMPRESAS:
+- Número de ofertas publicadas
+- Visualizaciones por oferta
+- Tasa de conversión (vistas → clicks)
+- Calificación promedio
+- Número de reseñas respondidas
+- Estado de suscripción
+
+PARA ADMINISTRADORES:
+- Total de usuarios registrados
+- Total de empresas verificadas
+- Total de ofertas activas
+- Tasa de verificación de empresas
+- Contenido moderado/eliminado
+- Ingresos por suscripciones
+
+================================================================================
+                         FIN DEL DOCUMENTO
+================================================================================

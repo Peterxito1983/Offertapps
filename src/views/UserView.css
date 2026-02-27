@@ -1,0 +1,157 @@
+.shopee-hero {
+    background: linear-gradient(135deg, var(--ion-color-primary) 0%, #5b47d1 100%);
+    padding: 40px 24px 80px 24px;
+}
+
+.user-search-section {
+    padding: 0 20px;
+    margin-top: -30px;
+    position: relative;
+    z-index: 10;
+}
+
+.user-main-searchbar {
+    --background: #ffffff;
+    --border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 0 16px;
+    height: 72px;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.user-main-searchbar:focus-within {
+    box-shadow: inset 6px 6px 12px #d1d9e6, inset -6px -6px 12px #ffffff;
+}
+
+.shopee-banner-placeholder {
+    background: var(--ion-color-secondary);
+    border-radius: 20px;
+    height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 60px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(255, 77, 77, 0.2);
+    border: none;
+}
+
+.banner-slide {
+    text-align: left;
+}
+
+.banner-slide h2 {
+    font-size: 5rem;
+    font-weight: 900;
+    color: #ffffff;
+    margin: 0;
+    line-height: 0.8;
+    letter-spacing: -0.06em;
+    text-transform: uppercase;
+}
+
+.banner-slide p {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 20px 0 0 0;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.shopee-categories-container {
+    padding: 60px 0;
+    background: transparent;
+}
+
+.shopee-categories-scroll {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    gap: 15px;
+    padding: 10px 20px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    /* Hide scrollbar Firefox */
+}
+
+.shopee-categories-scroll::-webkit-scrollbar {
+    display: none;
+    /* Hide scrollbar Chrome/Safari */
+}
+
+.shopee-category-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 10px;
+    min-width: 85px;
+    flex: 0 0 auto !important;
+    /* No encoger en flex horizontal */
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.icon-wrap {
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    background: #ffffff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--app-text-color);
+    font-size: 32px;
+    transition: all 0.2s ease;
+}
+
+.shopee-category-item.active .icon-wrap {
+    background: var(--ion-color-primary);
+    color: #ffffff;
+    transform: scale(1.1);
+    box-shadow: 0 10px 25px rgba(var(--ion-color-primary-rgb), 0.3);
+}
+
+.category-label {
+    font-size: 0.9rem;
+    font-weight: var(--app-font-weight-bold);
+    text-transform: uppercase;
+    color: var(--app-text-color);
+    letter-spacing: 0.1em;
+    opacity: 1;
+}
+
+.shopee-category-item.active .category-label {
+    color: var(--ion-color-primary);
+}
+
+.shopee-product-grid {
+    padding: 5px;
+}
+
+.shopee-product-col {
+    padding: 5px;
+}
+
+@media (max-width: 768px) {
+    .shopee-hero {
+        padding: 10px;
+    }
+
+    .shopee-banner-placeholder {
+        height: 120px;
+    }
+
+    .category-icon-wrap {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+
+    .shopee-category-item {
+        min-width: 70px;
+    }
+}

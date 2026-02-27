@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "945064284515",
+    "project_id": "offertapps",
+    "storage_bucket": "offertapps.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:945064284515:android:fa7d6245dbea75ab064356",
+        "android_client_info": {
+          "package_name": "com.offertapps.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGmDbVoY-1LvVabnJqExmX23EPj7ZpFpA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
