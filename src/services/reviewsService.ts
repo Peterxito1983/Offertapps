@@ -13,9 +13,9 @@ import { validateReview, sanitizeString } from '../utils/validation';
 const REVIEWS_REF = 'reviews';
 
 /**
- * Obtener reseñas de una oferta
+ * Obtener reseñas por tipo de objetivo e ID
  */
-export const getReviewsByOffer = async (offerId: string): Promise<Review[]> => {
+export const getReviewsByTarget = async (targetType: 'offer' | 'company' | 'user', targetId: string): Promise<Review[]> => {
     try {
         const reviewsRef = ref(db, REVIEWS_REF);
         const snapshot = await get(reviewsRef);
@@ -27,7 +27,36 @@ export const getReviewsByOffer = async (offerId: string): Promise<Review[]> => {
         const reviewsData = snapshot.val();
         const reviews: Review[] = Object.keys(reviewsData)
             .map(key => ({ id: key, ...reviewsData[key] }))
-            .filter(review => review.offerId === offerId)
+            .filter(review => review.targetType === targetType && review.targetId === targetId)
+            .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+        return reviews;
+    } catch (error) {
+        console.error('Error al obtener reseñas por objetivo:', error);
+        throw new Error('Error al cargar reseñas');
+    }
+};
+
+/**
+ * Obtener reseñas de una oferta
+ */
+export const getReviewsByOffer = async (offerId: string): Promise<Review[]> => {
+    // Para compatibilidad con datos antiguos, buscamos por offerId o por el nuevo sistema target
+    try {
+        const reviewsRef = ref(db, REVIEWS_REF);
+        const snapshot = await get(reviewsRef);
+
+        if (!snapshot.exists()) {
+            return [];
+        }
+
+        const reviewsData = snapshot.val();
+        const reviews: Review[] = Object.keys(reviewsData)
+            .map(key => ({ id: key, ...reviewsData[key] }))
+            .filter(review =>
+                (review.targetType === 'offer' && review.targetId === offerId) ||
+                (review.offerId === offerId)
+            )
             .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
         return reviews;
@@ -41,25 +70,14 @@ export const getReviewsByOffer = async (offerId: string): Promise<Review[]> => {
  * Obtener reseñas de una empresa
  */
 export const getReviewsByCompany = async (companyId: string): Promise<Review[]> => {
-    try {
-        const reviewsRef = ref(db, REVIEWS_REF);
-        const snapshot = await get(reviewsRef);
+    return getReviewsByTarget('company', companyId);
+};
 
-        if (!snapshot.exists()) {
-            return [];
-        }
-
-        const reviewsData = snapshot.val();
-        const reviews: Review[] = Object.keys(reviewsData)
-            .map(key => ({ id: key, ...reviewsData[key] }))
-            .filter(review => review.companyId === companyId)
-            .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-        return reviews;
-    } catch (error) {
-        console.error('Error al obtener reseñas:', error);
-        throw new Error('Error al cargar reseñas');
-    }
+/**
+ * Obtener reseñas de un usuario (recibidas por él)
+ */
+export const getReviewsByUser = async (userId: string): Promise<Review[]> => {
+    return getReviewsByTarget('user', userId);
 };
 
 /**
@@ -79,7 +97,9 @@ export const createReview = async (review: Omit<Review, 'id'>): Promise<string> 
             comment: sanitizeString(review.comment),
             userName: sanitizeString(review.userName),
             rating: review.rating,
-            offerId: review.offerId,
+            targetId: review.targetId,
+            targetType: review.targetType,
+            offerId: review.offerId || null,
             companyId: review.companyId,
             userId: review.userId,
             date: new Date().toISOString()

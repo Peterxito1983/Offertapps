@@ -67,8 +67,23 @@ export const validateOffer = (offer: Partial<Offer>): string[] => {
         errors.push('La descripción es demasiado larga');
     }
 
-    if (offer.discount && (parseFloat(offer.discount.replace(/[^\d.-]/g, '')) <= 0)) {
-        errors.push('El descuento debe ser un valor positivo');
+    if (offer.discount) {
+        // Permitir solo números, %, espacios, "OFF" y "x" (para 2x1)
+        const allowedRegex = /^([\d\s%.,x]|OFF)+$/i;
+        const cleanDiscount = offer.discount.trim().toUpperCase();
+
+        if (!allowedRegex.test(cleanDiscount)) {
+            errors.push('El descuento solo puede contener números, %, "OFF" o formatos como "2x1"');
+        } else {
+            const discountValue = parseFloat(cleanDiscount.replace(/[^\d.-]/g, ''));
+            // El límite del 90% solo aplica si parece ser un porcentaje o valor directo
+            if (discountValue > 90 && !cleanDiscount.includes('X')) {
+                errors.push('El descuento no puede ser superior al 90%');
+            }
+            if (discountValue <= 0 && !cleanDiscount.includes('X')) {
+                errors.push('El descuento debe ser un valor positivo');
+            }
+        }
     }
 
     if (offer.category && !['Comida', 'Moda', 'Tecnología', 'Servicios', 'Viajes', 'Hogar', 'Todos'].includes(offer.category)) {

@@ -261,7 +261,12 @@ export const CompanyProfileEditor: React.FC<CompanyProfileEditorProps> = ({ comp
                             <IonInput
                                 type="tel"
                                 value={formData.whatsapp}
-                                onIonInput={e => setFormData({ ...formData, whatsapp: e.detail.value! })}
+                                onIonInput={e => {
+                                    const val = e.detail.value || '';
+                                    // Filtrar para permitir solo números
+                                    const numericVal = val.replace(/\D/g, '');
+                                    setFormData({ ...formData, whatsapp: numericVal });
+                                }}
                                 placeholder="Ej: 3001234567"
                                 style={{ fontSize: '1.1rem', fontWeight: '600' }}
                             />

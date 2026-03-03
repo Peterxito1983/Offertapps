@@ -6,12 +6,14 @@ import {
     IonBadge,
     IonButton
 } from '@ionic/react';
-import { close, locationOutline, timeOutline, star, starOutline, logoWhatsapp, heart, heartOutline } from 'ionicons/icons';
+import { close, locationOutline, timeOutline, calendar, star, starOutline, logoWhatsapp, heart, heartOutline } from 'ionicons/icons';
 import { addToFavorites, removeFromFavorites, isFavorite } from '../services/favoritesService';
 import { Offer, Company, Review } from '../types';
 import { UserProfile } from '../services/authService';
 import { Share } from '@capacitor/share';
 import { sanitizePhoneNumber } from '../utils/validation';
+import { ReviewForm } from './ReviewForm';
+import { ReviewList } from './ReviewList';
 
 interface OfferDetailModalProps {
     offer: Offer;
@@ -32,8 +34,6 @@ export const OfferDetailModal: React.FC<OfferDetailModalProps> = ({
     onAddReview,
     isOpen = true
 }) => {
-    const [comment, setComment] = useState('');
-    const [rating, setRating] = useState(5);
     const [isFav, setIsFav] = useState(false);
 
     React.useEffect(() => {
@@ -61,38 +61,11 @@ export const OfferDetailModal: React.FC<OfferDetailModalProps> = ({
         }
     };
 
-    const handleAddReview = () => {
-        if (!currentUser || !comment.trim()) return;
+    const handleReviewSubmit = async (review: Omit<Review, 'id' | 'date'>) => {
         onAddReview({
-            offerId: offer.id,
-            companyId: offer.companyId,
-            userId: currentUser.uid,
-            userName: currentUser.displayName || 'Usuario',
-            rating,
-            comment,
+            ...review,
             date: new Date().toISOString()
-        });
-        setComment('');
-        setRating(5);
-    };
-
-    const renderStars = (currentRating: number, interactive: boolean = false) => {
-        return (
-            <div style={{ display: 'flex', gap: '8px', justifyContent: interactive ? 'center' : 'flex-start' }}>
-                {[1, 2, 3, 4, 5].map((starValue) => (
-                    <IonIcon
-                        key={starValue}
-                        icon={starValue <= currentRating ? star : starOutline}
-                        onClick={() => interactive && setRating(starValue)}
-                        style={{
-                            color: starValue <= currentRating ? 'var(--ion-color-tertiary)' : '#d1d5db',
-                            fontSize: interactive ? '32px' : '18px',
-                            cursor: interactive ? 'pointer' : 'default'
-                        }}
-                    />
-                ))}
-            </div>
-        );
+        } as Omit<Review, 'id'>);
     };
 
     const mainBranch = company.branches?.[0];
@@ -139,6 +112,27 @@ export const OfferDetailModal: React.FC<OfferDetailModalProps> = ({
                                 <IonIcon icon={timeOutline} color="primary" />
                                 <span>{company.openingHours || mainBranch?.openingHours}</span>
                             </div>
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '10px',
+                                fontSize: '0.9rem',
+                                padding: '8px 12px',
+                                background: 'var(--ion-color-primary-light)',
+                                borderRadius: '10px',
+                                marginTop: '4px'
+                            }}>
+                                <IonIcon icon={calendar} color="primary" />
+                                <span style={{ fontWeight: '600', color: 'var(--ion-color-primary-shade)' }}>
+                                    {offer.isRecurring ? (
+                                        'Esta es una oferta recurrente'
+                                    ) : offer.validUntil ? (
+                                        `Válida hasta el ${new Date(offer.validUntil).toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' })}`
+                                    ) : (
+                                        'Consulta disponibilidad en tienda'
+                                    )}
+                                </span>
+                            </div>
                         </div>
                     </div>
 
@@ -154,37 +148,26 @@ export const OfferDetailModal: React.FC<OfferDetailModalProps> = ({
                     </div>
 
                     <div className="reviews-section">
-                        <h3 style={{ fontWeight: '800', marginBottom: '20px' }}>Reseñas</h3>
-
                         {currentUser ? (
-                            <div className="enhanced-card" style={{ padding: '20px', background: 'white', marginBottom: '24px' }}>
-                                <div style={{ marginBottom: '16px' }}>{renderStars(rating, true)}</div>
-                                <textarea
-                                    value={comment}
-                                    onChange={e => setComment(e.target.value)}
-                                    placeholder="Deja tu comentario..."
-                                    style={{ width: '100%', height: '100px', border: '1px solid #eee', borderRadius: '12px', padding: '12px', marginBottom: '12px' }}
+                            <div style={{ marginBottom: '32px' }}>
+                                <ReviewForm
+                                    onSubmit={handleReviewSubmit}
+                                    targetType="offer"
+                                    targetId={offer.id}
+                                    companyId={offer.companyId}
+                                    userId={currentUser.uid}
+                                    userName={currentUser.displayName || 'Usuario'}
+                                    offerId={offer.id}
+                                    placeholder="¿Qué te pareció esta oferta?"
                                 />
-                                <IonButton expand="block" shape="round" onClick={handleAddReview} disabled={!comment.trim()}>Publicar</IonButton>
                             </div>
                         ) : (
-                            <div style={{ textAlign: 'center', padding: '20px', background: '#eee', borderRadius: '12px', marginBottom: '24px' }}>
-                                Inicia sesión para calificar esta oferta.
+                            <div style={{ textAlign: 'center', padding: '20px', background: 'white', borderRadius: '24px', marginBottom: '24px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
+                                <p style={{ margin: 0, color: '#64748b', fontWeight: '600' }}>Inicia sesión para calificar esta oferta.</p>
                             </div>
                         )}
 
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                            {reviews.map(review => (
-                                <div key={review.id} className="enhanced-card" style={{ padding: '16px', background: 'white' }}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                                        <span style={{ fontWeight: '700' }}>{review.userName}</span>
-                                        <span style={{ fontSize: '0.8rem', opacity: 0.5 }}>{new Date(review.date).toLocaleDateString()}</span>
-                                    </div>
-                                    {renderStars(review.rating)}
-                                    <p style={{ margin: '8px 0 0 0', fontStyle: 'italic', opacity: 0.8 }}>"{review.comment}"</p>
-                                </div>
-                            ))}
-                        </div>
+                        <ReviewList reviews={reviews} title="Reseñas de la Oferta" />
                     </div>
                 </div>
             </IonContent>

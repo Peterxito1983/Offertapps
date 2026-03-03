@@ -444,6 +444,7 @@ const App: React.FC = () => {
                                     <Route exact path="/tabs/profile">
                                         <ProfileView
                                             currentUser={currentUser}
+                                            reviews={reviews}
                                             onUpdateProfile={handleUpdateUserProfile}
                                         />
                                     </Route>

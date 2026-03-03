@@ -15,7 +15,7 @@ export interface SubscriptionTier {
 
 export interface PaymentMethod {
   id: string;
-  type: 'google_pay' | 'pse' | 'card' | 'paypal' | 'bank_transfer';
+  type: 'google_pay' | 'pse' | 'card' | 'paypal' | 'bank_transfer' | 'bre_b';
   last4?: string;
   brand?: string;
   expiryMonth?: number;

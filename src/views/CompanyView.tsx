@@ -15,6 +15,8 @@ import {
 import { search, sparkles, flash, fitness, shirt, laptop, car, home, pencil, add, trash, chatbubbleEllipses, barChartOutline, listOutline, card, close, logOut, megaphoneOutline, peopleOutline, starOutline, alertCircle, logoFacebook, logoInstagram, logoTiktok, person, chevronForward } from 'ionicons/icons';
 import { Header } from '../components/Header';
 import { Offer, Review, KpiData, Company, Role } from '../types';
+import { ReviewList } from '../components/ReviewList';
+import { ReviewForm } from '../components/ReviewForm';
 import { signOut } from '../services/authService';
 import { EnhancedCreateOfferModal } from '../components/EnhancedCreateOfferModal';
 import { KpiCard } from '../components/KpiCard';
@@ -25,6 +27,7 @@ import { CampaignModal } from '../components/CampaignModal';
 import { MarketingReportModal } from '../components/MarketingReportModal';
 import { SUBSCRIPTION_TIERS, syncSubscriptionPrices } from '../services/paymentService';
 import { getInteractionsByCompany } from '../services/analyticsService';
+import { createReview } from '../services/reviewsService';
 import { Interaction } from '../types';
 import './CompanyView.css';
 
@@ -79,6 +82,8 @@ export const CompanyView: React.FC<CompanyViewProps> = ({
     const [interactions, setInteractions] = useState<Interaction[]>([]);
     const [hasScrolled, setHasScrolled] = useState(false);
     const [paymentTargetPlan, setPaymentTargetPlan] = useState<'basico' | 'premium' | null>(null);
+    const [userToRate, setUserToRate] = useState<{ id: string, name: string } | null>(null);
+    const [showRateModal, setShowRateModal] = useState(false);
 
     const handleUpgradeFromCampaign = () => {
         setPaymentTargetPlan('premium');
@@ -368,13 +373,27 @@ export const CompanyView: React.FC<CompanyViewProps> = ({
                                 </div>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                                     {[
-                                        { user: "Juan Pérez", action: "Click WhatsApp", time: "hace 5 min", offer: "Combo Almuerzo" },
-                                        { user: "María García", action: "Guardó Oferta", time: "hace 22 min", offer: "Pizza 2x1" },
-                                        { user: "Carlos Ruiz", action: "Click WhatsApp", time: "hace 1h", offer: "Combo Almuerzo" }
+                                        { id: "u1", user: "Juan Pérez", action: "Click WhatsApp", time: "hace 5 min", offer: "Combo Almuerzo" },
+                                        { id: "u2", user: "María García", action: "Guardó Oferta", time: "hace 22 min", offer: "Pizza 2x1" },
+                                        { id: "u3", user: "Carlos Ruiz", action: "Click WhatsApp", time: "hace 1h", offer: "Combo Almuerzo" }
                                     ].map((lead, i) => (
                                         <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '12px', borderBottom: i < 2 ? '1px solid #f1f5f9' : 'none' }}>
-                                            <div>
-                                                <p style={{ margin: 0, fontWeight: '700', fontSize: '0.9rem', color: '#334155' }}>{lead.user}</p>
+                                            <div style={{ flex: 1 }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                    <p style={{ margin: 0, fontWeight: '700', fontSize: '0.9rem', color: '#334155' }}>{lead.user}</p>
+                                                    <IonButton
+                                                        fill="clear"
+                                                        size="small"
+                                                        style={{ height: '24px', margin: 0, '--padding-start': '4px', '--padding-end': '4px' }}
+                                                        onClick={() => {
+                                                            setUserToRate({ id: lead.id, name: lead.user });
+                                                            setShowRateModal(true);
+                                                        }}
+                                                    >
+                                                        <IonIcon icon={starOutline} style={{ fontSize: '14px' }} />
+                                                        <span style={{ fontSize: '10px', marginLeft: '2px', fontWeight: '800' }}>CALIFICAR</span>
+                                                    </IonButton>
+                                                </div>
                                                 <p style={{ margin: 0, fontSize: '0.75rem', color: '#64748b' }}>Interesado en: <b>{lead.offer}</b></p>
                                             </div>
                                             <div style={{ textAlign: 'right' }}>
@@ -396,57 +415,13 @@ export const CompanyView: React.FC<CompanyViewProps> = ({
                         </div>
                     ) : segment === 'reviews' ? (
                         <div style={{ animation: 'fadeIn 0.3s ease-out' }}>
-                            <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: 'var(--ion-color-dark)', marginBottom: '16px' }}>
-                                Reseñas de Clientes ({myReviews.length})
-                            </h3>
-                            {myReviews.length === 0 ? (
-                                <div style={{ textAlign: 'center', padding: '60px 40px', backgroundColor: 'white', borderRadius: '24px', boxShadow: 'var(--offertapps-shadow-sm)' }}>
-                                    <div style={{ width: '64px', height: '64px', backgroundColor: '#f1f5f9', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
-                                        <IonIcon icon={chatbubbleEllipses} style={{ fontSize: '32px', color: '#94a3b8' }} />
-                                    </div>
-                                    <h4 style={{ fontWeight: '800', margin: '0 0 8px 0', color: 'var(--ion-color-dark)' }}>Aún no hay reseñas</h4>
-                                    <p style={{ color: '#64748b', fontSize: '0.9rem', margin: 0 }}>Las opiniones de tus clientes aparecerán aquí.</p>
-                                </div>
-                            ) : (
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                                    {myReviews.map(review => (
-                                        <div key={review.id} style={{
-                                            backgroundColor: 'white',
-                                            borderRadius: '24px',
-                                            padding: '20px',
-                                            boxShadow: 'var(--offertapps-shadow-sm)'
-                                        }}>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                                                <div>
-                                                    <h5 style={{ margin: 0, fontWeight: '800', color: 'var(--ion-color-dark)' }}>{review.userName}</h5>
-                                                    <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: '500' }}>{review.date}</span>
-                                                </div>
-                                                <div style={{ backgroundColor: 'rgba(245, 158, 11, 0.1)', color: 'var(--ion-color-warning)', padding: '4px 8px', borderRadius: '8px', fontWeight: '800', fontSize: '0.85rem' }}>
-                                                    {review.rating} ⭐
-                                                </div>
-                                            </div>
-                                            <p style={{ margin: 0, color: '#475569', fontSize: '0.9rem', fontStyle: 'italic', lineHeight: '1.5' }}>"{review.comment}"</p>
-
-                                            {review.reply ? (
-                                                <div style={{ marginTop: '16px', padding: '12px', background: 'rgba(99, 102, 241, 0.05)', borderRadius: '16px', borderLeft: '4px solid var(--ion-color-primary)' }}>
-                                                    <p style={{ margin: 0, fontWeight: '800', fontSize: '0.8rem', color: 'var(--ion-color-primary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Tu respuesta:</p>
-                                                    <p style={{ margin: '4px 0 0 0', fontSize: '0.85rem', color: '#64748b' }}>{review.reply}</p>
-                                                </div>
-                                            ) : (
-                                                <button
-                                                    onClick={() => {
-                                                        const reply = prompt('Escribe tu respuesta a esta reseña:');
-                                                        if (reply) onReplyReview(review.id, reply);
-                                                    }}
-                                                    style={{ marginTop: '16px', width: '100%', padding: '10px', borderRadius: '12px', border: '1px solid var(--ion-color-primary)', backgroundColor: 'transparent', color: 'var(--ion-color-primary)', fontWeight: '700', fontSize: '0.85rem', cursor: 'pointer' }}
-                                                >
-                                                    Responder ahora
-                                                </button>
-                                            )}
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
+                            <ReviewList
+                                reviews={myReviews}
+                                canReply={true}
+                                onReply={onReplyReview}
+                                title="Reseñas de Clientes"
+                                emptyMessage="Las opiniones de tus clientes aparecerán aquí."
+                            />
                         </div>
                     ) : segment === 'profile' ? (
                         <div style={{ animation: 'fadeIn 0.3s ease-out' }}>
@@ -641,6 +616,38 @@ export const CompanyView: React.FC<CompanyViewProps> = ({
                     onClose={() => setIsMarketingReportOpen(false)}
                     interactions={interactions}
                 />
+
+                <IonModal
+                    isOpen={showRateModal}
+                    onDidDismiss={() => setShowRateModal(false)}
+                    breakpoints={[0, 0.5, 0.8]}
+                    initialBreakpoint={0.5}
+                >
+                    <div style={{ padding: '24px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                            <h3 style={{ fontWeight: '900', margin: 0 }}>Calificar a {userToRate?.name}</h3>
+                            <IonButton fill="clear" color="dark" onClick={() => setShowRateModal(false)}>
+                                <IonIcon icon={close} />
+                            </IonButton>
+                        </div>
+                        <ReviewForm
+                            targetType="user"
+                            targetId={userToRate?.id || ''}
+                            companyId={companyId}
+                            userId={companyId} // En este contexto, el autor es la empresa
+                            userName={currentCompany?.name || 'Empresa'}
+                            onSubmit={async (reviewData) => {
+                                await createReview({
+                                    ...reviewData,
+                                    date: new Date().toISOString()
+                                });
+                                setShowRateModal(false);
+                                alert('Reseña enviada correctamente');
+                            }}
+                            placeholder={`¿Cómo fue tu experiencia con ${userToRate?.name}?`}
+                        />
+                    </div>
+                </IonModal>
             </IonContent>
         </IonPage >
     );

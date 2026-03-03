@@ -31,18 +31,20 @@ import {
 import { UserProfile, signOut } from '../services/authService';
 import { updateUserProfile } from '../services/usersService';
 import { getFilteredNotifications } from '../services/notificationService';
-import { AppNotification } from '../types';
+import { AppNotification, Review } from '../types';
 import { UserSettingsModal } from '../components/UserSettingsModal';
 import { NotificationCenterModal } from '../components/NotificationCenterModal';
+import { ReviewList } from '../components/ReviewList';
 import { Header } from '../components/Header';
 import { Role } from '../types';
 
 interface ProfileViewProps {
     currentUser: UserProfile | null;
+    reviews: Review[];
     onUpdateProfile: (data: Partial<UserProfile>) => Promise<void>;
 }
 
-export const ProfileView: React.FC<ProfileViewProps> = ({ currentUser, onUpdateProfile }) => {
+export const ProfileView: React.FC<ProfileViewProps> = ({ currentUser, reviews, onUpdateProfile }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [name, setName] = useState(currentUser?.displayName || '');
     const [isLoading, setIsLoading] = useState(false);
@@ -93,6 +95,9 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ currentUser, onUpdateP
     };
 
     const unreadCount = notificationsList.filter(n => !n.read).length;
+
+    // Reseñas recibidas por el usuario
+    const myReceivedReviews = reviews.filter(r => r.targetType === 'user' && r.targetId === currentUser?.uid);
 
     return (
         <IonPage>
@@ -152,16 +157,36 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ currentUser, onUpdateP
                         ) : (
                             <>
                                 <h2 style={{ fontWeight: '900', fontSize: '1.8rem', margin: '0' }}>{currentUser?.displayName}</h2>
-                                <p style={{ color: '#64748b', margin: '5px 0 15px 0' }}>{currentUser?.email}</p>
-                                <IonButton fill="outline" shape="round" size="small" onClick={() => setIsEditing(true)}>
-                                    Editar Perfil
-                                </IonButton>
+                                <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '4px' }}>
+                                    <IonBadge color="primary" style={{ borderRadius: '8px', padding: '4px 8px' }}>
+                                        {myReceivedReviews.length > 0
+                                            ? (myReceivedReviews.reduce((acc, r) => acc + r.rating, 0) / myReceivedReviews.length).toFixed(1)
+                                            : '5.0'} ⭐
+                                    </IonBadge>
+                                    <IonBadge color="secondary" style={{ borderRadius: '8px', padding: '4px 8px' }}>
+                                        {currentUser?.email}
+                                    </IonBadge>
+                                </div>
+                                <div style={{ marginTop: '16px' }}>
+                                    <IonButton fill="outline" shape="round" size="small" onClick={() => setIsEditing(true)}>
+                                        Editar Perfil
+                                    </IonButton>
+                                </div>
                             </>
                         )}
                     </div>
                 </div>
 
+                <div style={{ marginBottom: '32px' }}>
+                    <ReviewList
+                        reviews={myReceivedReviews}
+                        title="Mis Reseñas"
+                        emptyMessage="Aún no has recibido reseñas de empresas."
+                    />
+                </div>
+
                 <IonList style={{ background: 'transparent' }}>
+                    <h4 style={{ margin: '0 0 16px 8px', fontWeight: '800', color: '#64748b', fontSize: '0.9rem' }}>Ajustes y Cuenta</h4>
                     <div className="enhanced-card" style={{ padding: '8px', background: 'white', marginBottom: '20px' }}>
                         <IonItem button detail={false} lines="none" onClick={() => setShowNotifications(true)} style={{ '--background': 'transparent' }}>
                             <div slot="start" style={{ padding: '10px', background: '#f5f3ff', color: 'var(--ion-color-primary)', borderRadius: '12px' }}>

@@ -123,14 +123,26 @@ export const OfferCard: React.FC<OfferCardProps> = ({ offer, company, onShowOffe
                 </div>
 
                 <div className="shopee-card-meta">
-                    <div className="shopee-card-location">
-                        {company.city || 'Colombia'}
+                    <div className="shopee-card-validity" style={{ color: 'var(--ion-color-primary)', fontWeight: '600', fontSize: '0.7rem', display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '4px' }}>
+                        <IonIcon icon={timeOutline} style={{ fontSize: '12px' }} />
+                        {offer.isRecurring ? (
+                            <span>Oferta Recurrente</span>
+                        ) : offer.validUntil ? (
+                            <span>Válida hasta: {new Date(offer.validUntil).toLocaleDateString('es-CO', { day: 'numeric', month: 'short' })}</span>
+                        ) : (
+                            <span>Ver vigencia</span>
+                        )}
                     </div>
-                    {distance && (
-                        <div className="shopee-card-distance">
-                            {distance}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                        <div className="shopee-card-location">
+                            {company.city || 'Colombia'}
                         </div>
-                    )}
+                        {distance && (
+                            <div className="shopee-card-distance">
+                                {distance}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

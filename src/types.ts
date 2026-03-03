@@ -93,7 +93,9 @@ export interface Offer {
 
 export interface Review {
     id: string;
-    offerId: string;
+    targetType: 'offer' | 'company' | 'user';
+    targetId: string;
+    offerId?: string;
     companyId: string;
     userId: string;
     userName: string;

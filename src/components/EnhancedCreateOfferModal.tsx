@@ -52,8 +52,18 @@ const descriptionValidation = {
 };
 
 const discountValidation = {
-  validate: (value: string) => value.length >= 1,
-  errorMessage: 'El descuento es requerido'
+  validate: (value: string) => {
+    if (value.length < 1) return false;
+    const allowedRegex = /^([\d\s%.,x]|OFF)+$/i;
+    const cleanValue = value.trim().toUpperCase();
+    if (!allowedRegex.test(cleanValue)) return false;
+
+    const discountValue = parseFloat(cleanValue.replace(/[^\d.-]/g, ''));
+    // El límite solo aplica si no es un formato 2x1 (X)
+    if (discountValue > 90 && !cleanValue.includes('X')) return false;
+    return true;
+  },
+  errorMessage: 'Solo números, %, OFF, x (ej: 2x1) y máx 90%'
 };
 
 // Validación para la imagen
@@ -197,7 +207,21 @@ export const EnhancedCreateOfferModal: React.FC<EnhancedCreateOfferModalProps> =
 
     if (title.length < 3) newErrors.title = 'El título debe tener al menos 3 caracteres';
     if (description.length < 10) newErrors.description = 'La descripción debe tener al menos 10 caracteres';
-    if (!discount) newErrors.discount = 'El descuento es obligatorio';
+    if (!discount) {
+      newErrors.discount = 'El descuento es obligatorio';
+    } else {
+      const allowedRegex = /^([\d\s%.,x]|OFF)+$/i;
+      const cleanDiscount = discount.trim().toUpperCase();
+
+      if (!allowedRegex.test(cleanDiscount)) {
+        newErrors.discount = 'Solo se permiten números, %, OFF y x (ej: 2x1)';
+      } else {
+        const discountValue = parseFloat(cleanDiscount.replace(/[^\d.-]/g, ''));
+        if (discountValue > 90 && !cleanDiscount.includes('X')) {
+          newErrors.discount = 'El descuento no puede ser superior al 90%';
+        }
+      }
+    }
 
     // Solo validar imagen si no hay una previa (caso edición)
     if (!imagePreview && !imageFile) {

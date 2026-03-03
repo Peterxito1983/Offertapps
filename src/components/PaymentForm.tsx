@@ -15,7 +15,9 @@ import {
   rocket,
   shieldCheckmark,
   alertCircle,
-  arrowForward
+  arrowForward,
+  wallet,
+  copy
 } from 'ionicons/icons';
 import {
   SubscriptionPlan,
@@ -38,7 +40,7 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
   onCancel
 }) => {
   const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan>(currentPlan || 'basico');
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'pse' | 'google_pay'>('pse');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'pse' | 'google_pay' | 'bre_b'>('pse');
   const [loading, setLoading] = useState(false);
   const [showProcessing, setShowProcessing] = useState(false);
   const [showPSEPortal, setShowPSEPortal] = useState(false);
@@ -76,6 +78,26 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
           setShowProcessing(false);
           setShowPSEPortal(true);
         }, 2000);
+
+      } else if (paymentMethod === 'bre_b') {
+        setLoading(true);
+        // Simular notificación al sistema sobre el pago manual
+        const paymentMethodData: PaymentMethod = {
+          id: `bre_b_${Date.now()}`,
+          type: 'bre_b'
+        };
+
+        await paymentService.createPaymentIntent(companyId, selectedPlan, paymentMethodData);
+
+        // Simular un pequeño retardo de procesamiento
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
+        setToastMessage('¡Notificación de pago enviada! Validaremos tu transferencia pronto.');
+        setShowToast(true);
+        setLoading(false);
+        // Podríamos llamar a onSuccess aquí o esperar validación manual. 
+        // Para UX inmediata en esta demo, simularemos éxito tras aviso.
+        setTimeout(() => onSuccess(`bre_b_pending_${Date.now()}`), 2000);
 
       } else {
         setLoading(true);
@@ -225,6 +247,7 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
       <div style={{ display: 'flex', gap: '10px' }}>
         {[
           { id: 'pse', icon: business, label: 'PSE' },
+          { id: 'bre_b', icon: wallet, label: 'Bre-B' },
           { id: 'card', icon: card, label: 'Tarjeta' },
           { id: 'google_pay', icon: logoGoogle, label: 'GPay' }
         ].map(method => (
@@ -302,7 +325,71 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
         </div>
       )}
 
-      {paymentMethod !== 'pse' && (
+      {/* Sección Bre-B */}
+      {paymentMethod === 'bre_b' && (
+        <div style={{
+          background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+          padding: '24px',
+          borderRadius: '24px',
+          border: '1px solid #e2e8f0',
+          animation: 'fadeIn 0.3s ease'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+            <div style={{ background: '#3b82f6', padding: '8px', borderRadius: '12px', display: 'flex' }}>
+              <IonIcon icon={wallet} style={{ color: 'white', fontSize: '20px' }} />
+            </div>
+            <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: '800', color: '#1e293b' }}>Pagar con Bre-B</h3>
+          </div>
+
+          <p style={{ color: '#64748b', fontSize: '0.9rem', lineHeight: '1.5', marginBottom: '20px' }}>
+            Para realizar tu pago, utiliza la siguiente llave Bre-B desde la aplicación de tu entidad financiera favorita:
+          </p>
+
+          <div style={{
+            background: 'white',
+            padding: '20px',
+            borderRadius: '20px',
+            border: '2px dashed #3b82f6',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: '20px'
+          }}>
+            <div>
+              <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#94a3b8', textTransform: 'uppercase', marginBottom: '4px', display: 'block' }}>Llave Bre-B</span>
+              <strong style={{ fontSize: '1.4rem', color: '#3b82f6', letterSpacing: '1px' }}>@3045383729</strong>
+            </div>
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText('@3045383729');
+                setToastMessage('Llave copiada al portapapeles');
+                setShowToast(true);
+              }}
+              style={{
+                background: '#eff6ff',
+                color: '#3b82f6',
+                border: 'none',
+                width: '44px',
+                height: '44px',
+                borderRadius: '14px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <IonIcon icon={copy} />
+            </button>
+          </div>
+
+          <div style={{ background: '#ecfdf5', padding: '12px 16px', borderRadius: '14px', border: '1px solid #d1fae5', display: 'flex', gap: '10px' }}>
+            <IonIcon icon={checkmarkCircle} style={{ color: '#10b981', fontSize: '18px' }} />
+            <span style={{ fontSize: '0.8rem', color: '#065f46', fontWeight: '600' }}>Una vez realizada la transferencia, haz clic en "Confirmar Pago" para que validemos tu membresía.</span>
+          </div>
+        </div>
+      )}
+
+      {paymentMethod !== 'pse' && paymentMethod !== 'bre_b' && (
         <div style={{ background: '#fff7ed', padding: '24px', borderRadius: '24px', textAlign: 'center', border: '1px dashed #fdba74' }}>
           <IonIcon icon={alertCircle} style={{ fontSize: '32px', color: '#f97316', marginBottom: '12px' }} />
           <p style={{ margin: 0, color: '#9a3412', fontSize: '0.9rem', fontWeight: '600' }}>Este método se habilitará pronto. Por ahora usa PSE para una activación inmediata.</p>
@@ -347,7 +434,7 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
         >
           {loading ? <IonSpinner name="crescent" color="light" /> : (
             <>
-              Proceder al Pago
+              {paymentMethod === 'bre_b' ? 'Confirmar Transferencia' : 'Proceder al Pago'}
               <IonIcon icon={arrowForward} />
             </>
           )}
